@@ -100,6 +100,25 @@ sqlite.exec(`
 try { sqlite.exec(`ALTER TABLE users ADD COLUMN expires_at TEXT`); } catch { /* already exists */ }
 try { sqlite.exec(`ALTER TABLE users ADD COLUMN password_hash TEXT`); } catch { /* already exists */ }
 try { sqlite.exec(`ALTER TABLE users ADD COLUMN last_request_at TEXT`); } catch { /* already exists */ }
+try { sqlite.exec(`ALTER TABLE users ADD COLUMN google_id TEXT`); } catch { /* already exists */ }
+
+// usage_logs migrations
+try { sqlite.exec(`ALTER TABLE usage_logs ADD COLUMN api_key TEXT`); } catch { /* already exists */ }
+try { sqlite.exec(`ALTER TABLE usage_logs ADD COLUMN endpoint TEXT`); } catch { /* already exists */ }
+try { sqlite.exec(`ALTER TABLE usage_logs ADD COLUMN credits_deducted INTEGER DEFAULT 0`); } catch { /* already exists */ }
+try { sqlite.exec(`ALTER TABLE usage_logs ADD COLUMN status TEXT`); } catch { /* already exists */ }
+try { sqlite.exec(`ALTER TABLE usage_logs ADD COLUMN error_message TEXT`); } catch { /* already exists */ }
+try { sqlite.exec(`ALTER TABLE usage_logs ADD COLUMN ip TEXT`); } catch { /* already exists */ }
+try { sqlite.exec(`ALTER TABLE usage_logs ADD COLUMN user_agent TEXT`); } catch { /* already exists */ }
+
+// low_credit_alerts migrations
+try { sqlite.exec(`ALTER TABLE low_credit_alerts ADD COLUMN alert_type TEXT`); } catch { /* already exists */ }
+try { sqlite.exec(`ALTER TABLE low_credit_alerts ADD COLUMN message TEXT`); } catch { /* already exists */ }
+try { sqlite.exec(`ALTER TABLE low_credit_alerts ADD COLUMN percentage INTEGER`); } catch { /* already exists */ }
+
+// payments migrations
+try { sqlite.exec(`ALTER TABLE payments ADD COLUMN amount_kz INTEGER`); } catch { /* already exists */ }
+try { sqlite.exec(`ALTER TABLE payments ADD COLUMN paid_at TEXT`); } catch { /* already exists */ }
 
 function flattenParams(params: any[]): any[] {
   if (params.length === 1 && Array.isArray(params[0])) {
