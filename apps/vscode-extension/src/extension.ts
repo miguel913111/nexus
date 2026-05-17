@@ -8,7 +8,7 @@ export function activate(context: vscode.ExtensionContext) {
   // Load config
   const config = vscode.workspace.getConfiguration('nexus');
   const apiKey = config.get<string>('apiKey');
-  const apiUrl = config.get<string>('apiUrl') || 'https://api.nexus-ia.ao/v1';
+  const apiUrl = config.get<string>('apiUrl') || 'https://api-gateway-production-dccf.up.railway.app/v1';
 
   statusBar = new StatusBarManager();
   statusBar.show();
@@ -96,7 +96,7 @@ export function activate(context: vscode.ExtensionContext) {
         const response = await fetch(`${apiUrl}/chat/status`, {
           headers: { 'X-API-Key': apiKey }
         });
-        const data = await response.json();
+        const data = await response.json() as any;
         
         const credits = data.user.credits;
         const percent = Math.round((credits.used / credits.total) * 100);
@@ -106,8 +106,8 @@ export function activate(context: vscode.ExtensionContext) {
         );
         
         statusBar.update(`NEXUS: ${credits.remaining.toLocaleString()} créditos`, '$(check)');
-      } catch (err: any) {
-        vscode.window.showErrorMessage(`NEXUS IA Erro: ${err.message}`);
+      } catch (err) {
+        vscode.window.showErrorMessage(`NEXUS IA Erro: ${(err as any).message}`);
         statusBar.update('NEXUS IA: Erro', '$(error)');
       }
     })
@@ -141,7 +141,7 @@ async function runNexusAction(prompt: string, apiKey: string | undefined, apiUrl
     });
 
     if (!response.ok) {
-      const err = await response.json();
+      const err = await response.json() as any;
       if (err.code === 'INSUFFICIENT_CREDITS') {
         vscode.window.showWarningMessage(`NEXUS IA: Créditos insuficientes. Restantes: ${err.creditsRemaining}`);
       } else if (err.code === 'RATE_LIMIT_EXCEEDED') {
@@ -153,7 +153,7 @@ async function runNexusAction(prompt: string, apiKey: string | undefined, apiUrl
       return null;
     }
 
-    const data = await response.json();
+    const data = await response.json() as any;
     statusBar.update('NEXUS IA: Pronto', '$(check)');
     
     if (data.credits) {
@@ -161,8 +161,8 @@ async function runNexusAction(prompt: string, apiKey: string | undefined, apiUrl
     }
     
     return data.content;
-  } catch (err: any) {
-    vscode.window.showErrorMessage(`NEXUS IA Erro: ${err.message}`);
+  } catch (err) {
+    vscode.window.showErrorMessage(`NEXUS IA Erro: ${(err as any).message}`);
     statusBar.update('NEXUS IA: Erro', '$(error)');
     return null;
   }

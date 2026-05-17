@@ -112,7 +112,7 @@ export class ChatPanel {
       });
 
       if (!response.ok) {
-        const err = await response.json();
+        const err = await response.json() as any;
         this._panel.webview.postMessage({
           type: 'error',
           text: err.error || 'Erro desconhecido',
@@ -121,7 +121,7 @@ export class ChatPanel {
         return;
       }
 
-      const data = await response.json();
+      const data = await response.json() as any;
       this._messages.push({ role: 'user', content: cleanedText });
       this._messages.push({ role: 'assistant', content: data.content });
 
@@ -137,10 +137,10 @@ export class ChatPanel {
         model: data.model,
         alert: data.alerts?.lowCredits ? 'Créditos baixos! Renova em nexus-ia.ao' : null
       });
-    } catch (err: any) {
+    } catch (err) {
       this._panel.webview.postMessage({
         type: 'error',
-        text: err.message
+        text: (err as any).message
       });
     }
   }
@@ -150,7 +150,7 @@ export class ChatPanel {
       const response = await fetch(`${this._apiUrl}/chat/status`, {
         headers: { 'X-API-Key': this._apiKey }
       });
-      const data = await response.json();
+      const data = await response.json() as any;
       
       this._panel.webview.postMessage({
         type: 'status',
