@@ -2,6 +2,7 @@ import chalk from 'chalk';
 import fs from 'fs';
 import os from 'os';
 import path from 'path';
+import inquirer from 'inquirer';
 import { NexusApiClient } from '@nexus-ia/core';
 
 const CONFIG_DIR = path.join(os.homedir(), '.nexus');
@@ -29,31 +30,46 @@ function saveConfig(config: CliConfig) {
   fs.writeFileSync(CONFIG_FILE, JSON.stringify(config, null, 2), { mode: 0o600 });
 }
 
-export async function loginCommand(options: { key: string; url: string }) {
-  console.log(chalk.blue('🔐 A verificar API Key...'));
-  
+export async function loginCommand(options: { key?: string; url?: string }) {
+  let apiKey = options.key;
+  let apiUrl = options.url || 'https://api-gateway-production-dccf.up.railway.app/v1';
+
+  if (!apiKey) {
+    const answers = await inquirer.prompt([
+      {
+        type: 'input',
+        name: 'key',
+        message: 'Digita a tua API Key:',
+        validate: (input: string) => input.trim().length > 0 ? true : 'API Key é obrigatória.'
+      }
+    ]);
+    apiKey = answers.key.trim();
+  }
+
+  console.log(chalk.blue('A verificar API Key...'));
+
   try {
-    const client = new NexusApiClient({ 
-      apiKey: options.key,
-      baseURL: options.url
+    const client = new NexusApiClient({
+      apiKey: apiKey,
+      baseURL: apiUrl
     });
-    
+
     const status = await client.getStatus();
-    
+
     saveConfig({
-      apiKey: options.key,
-      apiUrl: options.url,
+      apiKey: apiKey,
+      apiUrl: apiUrl,
       email: status.user.email
     });
-    
-    console.log(chalk.green('✅ Login bem-sucedido!'));
+
+    console.log(chalk.green('Login bem-sucedido!'));
     console.log(`Email: ${status.user.email}`);
     console.log(`Plano: ${status.user.plan}`);
     console.log(`Créditos: ${status.user.credits.remaining.toLocaleString()} / ${status.user.credits.total.toLocaleString()}`);
     console.log(`Expira: ${new Date(status.user.expiresAt).toLocaleDateString('pt-AO')}`);
-    
+
   } catch (err: any) {
-    console.log(chalk.red(`❌ Login falhou: ${err.response?.data?.error || err.message}`));
+    console.log(chalk.red(`Login falhou: ${err.response?.data?.error || err.message}`));
     process.exit(1);
   }
 }
@@ -77,6 +93,6 @@ export function authCommand() {
     console.log(chalk.gray('Usa "nexus status" para ver detalhes da conta'));
   } else {
     console.log(chalk.yellow('⚠️  Não autenticado'));
-    console.log(chalk.gray('Usa: nexus login --key <tua-api-key>'));
+    console.log(chalk.gray('Usa: nexus login'));
   }
 }

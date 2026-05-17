@@ -31,7 +31,7 @@ program
   .action(async (prompt, options) => {
     const config = await import('./commands/auth').then(m => m.loadConfig());
     if (!config.apiKey) {
-      console.log(chalk.red('❌ Não autenticado. Corre primeiro: nexus login --key <tua-api-key>'));
+      console.log(chalk.red('❌ Não autenticado. Corre primeiro: nexus login'));
       process.exit(1);
     }
 
@@ -73,7 +73,7 @@ program
 program
   .command('login')
   .description('Autenticar com API Key')
-  .requiredOption('-k, --key <apiKey>', 'A tua API Key da NEXUS IA')
+  .option('-k, --key <apiKey>', 'A tua API Key da NEXUS IA')
   .option('-u, --url <url>', 'URL da API', 'https://api-gateway-production-dccf.up.railway.app/v1')
   .action(loginCommand);
 
