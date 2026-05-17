@@ -1,0 +1,84 @@
+{
+  "name": "nexus-ia",
+  "displayName": "NEXUS IA - Kimi K2.6",
+  "description": "Assistente de código com Kimi K2.6 para Angola via NEXUS IA",
+  "version": "0.1.0",
+  "publisher": "nexus-ia",
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "categories": ["Machine Learning", "Snippets", "Programming Languages"],
+  "activationEvents": ["onStartupFinished"],
+  "main": "./dist/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "nexus.chat",
+        "title": "NEXUS: Abrir Chat",
+        "icon": "$(comment-discussion)"
+      },
+      {
+        "command": "nexus.explain",
+        "title": "NEXUS: Explicar código"
+      },
+      {
+        "command": "nexus.refactor",
+        "title": "NEXUS: Refatorar código"
+      },
+      {
+        "command": "nexus.generateTests",
+        "title": "NEXUS: Gerar testes"
+      },
+      {
+        "command": "nexus.status",
+        "title": "NEXUS: Ver estado da conta"
+      }
+    ],
+    "menus": {
+      "editor/context": [
+        {
+          "command": "nexus.explain",
+          "group": "nexus@1",
+          "when": "editorHasSelection"
+        },
+        {
+          "command": "nexus.refactor",
+          "group": "nexus@2",
+          "when": "editorHasSelection"
+        },
+        {
+          "command": "nexus.generateTests",
+          "group": "nexus@3"
+        }
+      ]
+    },
+    "configuration": {
+      "title": "NEXUS IA",
+      "properties": {
+        "nexus.apiKey": {
+          "type": "string",
+          "default": "",
+          "description": "API Key da NEXUS IA (obtém em nexus-ia.ao)"
+        },
+        "nexus.apiUrl": {
+          "type": "string",
+          "default": "https://api.nexus-ia.ao/v1",
+          "description": "URL da API NEXUS IA"
+        }
+      }
+    }
+  },
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch"
+  },
+  "dependencies": {
+    "@nexus-ia/core": "*",
+    "@nexus-ia/types": "*"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "@types/vscode": "^1.85.0",
+    "typescript": "^5.4.0"
+  }
+}

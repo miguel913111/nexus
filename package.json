@@ -1,0 +1,22 @@
+{
+  "name": "nexus-ia",
+  "version": "0.1.0",
+  "private": true,
+  "description": "NEXUS IA - IDE e CLI com Kimi K2.6 para Angola",
+  "scripts": {
+    "build": "turbo run build",
+    "dev": "turbo run dev --parallel",
+    "lint": "turbo run lint",
+    "test": "turbo run test"
+  },
+  "devDependencies": {
+    "turbo": "^2.0.0",
+    "typescript": "^5.4.0"
+  },
+  "workspaces": [
+    "apps/*",
+    "packages/*",
+    "services/*"
+  ],
+  "packageManager": "npm@10.0.0"
+}
