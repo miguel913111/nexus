@@ -4,6 +4,17 @@
   "description": "Assistente de código com Kimi K2.6 para Angola via NEXUS IA",
   "version": "0.1.0",
   "publisher": "nexus-ia",
+  "icon": "icon.png",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/miguel913111/nexus"
+  },
+  "homepage": "https://web-production-6ef15.up.railway.app",
+  "bugs": {
+    "url": "https://github.com/miguel913111/nexus/issues"
+  },
+  "keywords": ["nexus", "kimi", "ai", "assistant", "angola", "deepinfra", "chat", "code"],
+  "license": "MIT",
   "engines": {
     "vscode": "^1.85.0"
   },
