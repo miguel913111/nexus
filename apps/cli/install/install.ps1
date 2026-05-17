@@ -74,7 +74,7 @@ Write-Host "==================================="
 Write-Host ""
 Write-Host "Abre uma NOVA janela do terminal e corre:" -ForegroundColor Green
 Write-Host ""
-Write-Host "   nexus login --key <tua-api-key>" -ForegroundColor Yellow
+Write-Host "   nexus login" -ForegroundColor Yellow
 Write-Host ""
 Write-Host "Comandos disponiveis:" -ForegroundColor White
 Write-Host "   nexus chat          Chat interativo"

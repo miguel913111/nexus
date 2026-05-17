@@ -5,7 +5,7 @@ import { loadConfig } from './auth';
 export async function usageCommand(options: { limit: string }) {
   const config = loadConfig();
   if (!config.apiKey) {
-    console.log(chalk.red('❌ Não autenticado. Corre: nexus login --key <tua-api-key>'));
+    console.log(chalk.red('❌ Não autenticado. Corre: nexus login'));
     return;
   }
 

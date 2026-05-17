@@ -7,7 +7,7 @@ import { loadConfig } from './auth';
 export async function chatMode(options: { files?: string[] }) {
   const config = loadConfig();
   if (!config.apiKey) {
-    console.log(chalk.red('❌ Não autenticado. Corre primeiro: nexus login --key <tua-api-key>'));
+    console.log(chalk.red('❌ Não autenticado. Corre primeiro: nexus login'));
     return;
   }
 

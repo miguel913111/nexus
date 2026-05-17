@@ -53945,7 +53945,7 @@ init_auth();
 async function chatMode(options) {
   const config = loadConfig();
   if (!config.apiKey) {
-    console.log(import_chalk2.default.red("\u274C N\xE3o autenticado. Corre primeiro: nexus login --key <tua-api-key>"));
+    console.log(import_chalk2.default.red("\u274C N\xE3o autenticado. Corre primeiro: nexus login"));
     return;
   }
   const client = new import_core2.NexusApiClient({
@@ -54055,7 +54055,7 @@ init_auth();
 async function statusCommand() {
   const config = loadConfig();
   if (!config.apiKey) {
-    console.log(import_chalk3.default.red("\u274C N\xE3o autenticado. Corre: nexus login --key <tua-api-key>"));
+    console.log(import_chalk3.default.red("\u274C N\xE3o autenticado. Corre: nexus login"));
     return;
   }
   try {
@@ -54113,7 +54113,7 @@ init_auth();
 async function usageCommand(options) {
   const config = loadConfig();
   if (!config.apiKey) {
-    console.log(import_chalk4.default.red("\u274C N\xE3o autenticado. Corre: nexus login --key <tua-api-key>"));
+    console.log(import_chalk4.default.red("\u274C N\xE3o autenticado. Corre: nexus login"));
     return;
   }
   try {
