@@ -3,6 +3,7 @@ import fs from 'fs';
 import os from 'os';
 import path from 'path';
 import inquirer from 'inquirer';
+import open from 'open';
 import { NexusApiClient } from '@nexus-ia/core';
 
 const CONFIG_DIR = path.join(os.homedir(), '.nexus');
@@ -30,9 +31,17 @@ function saveConfig(config: CliConfig) {
   fs.writeFileSync(CONFIG_FILE, JSON.stringify(config, null, 2), { mode: 0o600 });
 }
 
-export async function loginCommand(options: { key?: string; url?: string }) {
+export async function loginCommand(options: { key?: string; url?: string; browser?: boolean }) {
   let apiKey = options.key;
   let apiUrl = options.url || 'https://api-gateway-production-dccf.up.railway.app/v1';
+
+  if (options.browser) {
+    const dashboardUrl = 'https://web-production-6ef15.up.railway.app/dashboard';
+    console.log(chalk.blue('A abrir o browser no dashboard...'));
+    await open(dashboardUrl);
+    console.log(chalk.gray('Faz login no browser (GitHub, Google ou Email) e copia a tua API Key.'));
+    console.log();
+  }
 
   if (!apiKey) {
     const answers = await inquirer.prompt([
@@ -66,7 +75,8 @@ export async function loginCommand(options: { key?: string; url?: string }) {
     console.log(`Email: ${status.user.email}`);
     console.log(`Plano: ${status.user.plan}`);
     console.log(`Créditos: ${status.user.credits.remaining.toLocaleString()} / ${status.user.credits.total.toLocaleString()}`);
-    console.log(`Expira: ${new Date(status.user.expiresAt).toLocaleDateString('pt-AO')}`);
+    console.log(`Expira: ${status.user.expiresAt ? new Date(status.user.expiresAt).toLocaleDateString('pt-AO') : 'Nunca'}`);
+    console.log(chalk.gray('\nSessao guardada. Podes fechar o terminal e voltar quando quiseres.'));
 
   } catch (err: any) {
     console.log(chalk.red(`Login falhou: ${err.response?.data?.error || err.message}`));
