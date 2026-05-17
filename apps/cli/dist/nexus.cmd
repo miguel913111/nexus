@@ -1,2 +1,2 @@
 @echo off
-node "%~dp0bundle.js" %*
+node "%~dp0nexus.js" %*
