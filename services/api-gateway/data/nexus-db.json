@@ -1,0 +1,64 @@
+{
+  "users": [
+    {
+      "id": "test-user-001",
+      "email": "demo@nexus.ia",
+      "name": "Utilizador Teste",
+      "plan": "teste",
+      "api_key": "nx-test-00000000-0000-0000-0000-000000000001",
+      "credits_remaining": 100000,
+      "credits_total": 100000,
+      "status": "active",
+      "expires_at": "2026-05-23T11:34:12.041Z"
+    },
+    {
+      "id": "u-3days",
+      "email": "u3@example.com",
+      "name": "User3",
+      "plan": "teste",
+      "api_key": "key3",
+      "credits_remaining": 100,
+      "credits_total": 100,
+      "status": "active",
+      "expires_at": "2026-05-19T12:54:51.282Z"
+    }
+  ],
+  "payments": [],
+  "usage_logs": [
+    {
+      "id": "9b9bcb0d-e84b-4147-8a47-7c2145004fbb",
+      "user_id": "test-user-001",
+      "api_key": "nx-test-00000000-0000-0000-0000-000000000001",
+      "endpoint": "/v1/chat/completions",
+      "tokens_input": 0,
+      "tokens_output": 0,
+      "tokens_total": 0,
+      "credits_deducted": 0,
+      "status": "error",
+      "error_message": "All models failed: moonshot-kimi: Request failed with status code 429",
+      "ip": "::1",
+      "user_agent": "curl/8.19.0"
+    }
+  ],
+  "low_credit_alerts": [],
+  "referrals": [],
+  "vouchers": [
+    {
+      "id": "voucher-nexus10",
+      "code": "NEXUS10",
+      "discount_percent": 10,
+      "max_uses": 9999,
+      "expiry_date": "2027-05-16T12:54:12.684Z",
+      "is_first_purchase_only": 0
+    },
+    {
+      "id": "voucher-angola20",
+      "code": "ANGOLA20",
+      "discount_percent": 20,
+      "max_uses": 9999,
+      "expiry_date": "2027-05-16T12:54:12.685Z",
+      "is_first_purchase_only": 1
+    }
+  ],
+  "voucher_uses": []
+}

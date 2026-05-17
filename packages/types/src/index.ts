@@ -49,12 +49,12 @@ export interface PlanConfig {
 export const PLANS: Record<PlanType, PlanConfig> = {
   teste: {
     name: 'Teste',
-    credits: 100000,
+    credits: 10000,
     priceKZ: 0,
     bonus: 0,
     rateLimitPerMin: 10,
     maxTokensPerRequest: 2048,
-    features: ['100K tokens', '10 req/min', 'Suporte básico', 'Acesso por 7 dias']
+    features: ['10.000 tokens', '10 req/min', 'Suporte básico', 'Sem limite de tempo']
   },
   starter: {
     name: 'Starter',

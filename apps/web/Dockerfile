@@ -3,17 +3,21 @@ FROM node:20-alpine
 
 WORKDIR /app
 
-# Copy root package files for workspace install
+# Build argument for API URL (will be available during build)
+ARG NEXT_PUBLIC_API_URL=https://api-gateway-production-dccf.up.railway.app
+ENV NEXT_PUBLIC_API_URL=$NEXT_PUBLIC_API_URL
+
+# Copy all package files and source code
 COPY package*.json ./
-COPY apps/web/package*.json ./apps/web/
-COPY packages/*/package*.json ./packages/*/
-
-# Install all dependencies (including dev, needed for build)
-RUN npm ci
-
-# Copy source code
-COPY apps/web ./apps/web
+COPY turbo.json ./
 COPY packages ./packages
+COPY apps/web ./apps/web
+
+# Install all dependencies
+RUN npm install
+
+# Build shared packages
+RUN cd /app/packages/types && npm run build
 
 # Build Next.js for production
 WORKDIR /app/apps/web

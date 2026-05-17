@@ -20,6 +20,10 @@ import { db } from './database';
   )
 `);
 
+// Migrations: add missing columns to existing tables
+try { db.exec(`ALTER TABLE users ADD COLUMN password_hash TEXT`); } catch { /* already exists */ }
+try { db.exec(`ALTER TABLE users ADD COLUMN expires_at TEXT`); } catch { /* already exists */ }
+
 // Payments table
  db.exec(`
   CREATE TABLE IF NOT EXISTS payments (
@@ -117,10 +121,10 @@ import { db } from './database';
      'Utilizador Teste',
      'teste',
      'nx-test-00000000-0000-0000-0000-000000000001',
-     100000,
-     100000,
+     10000,
+     10000,
      'active',
-     new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString()
+     null
    ]);
  }
 

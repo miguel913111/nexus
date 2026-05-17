@@ -96,6 +96,11 @@ sqlite.exec(`
   );
 `);
 
+// Migrations for existing tables
+try { sqlite.exec(`ALTER TABLE users ADD COLUMN expires_at TEXT`); } catch { /* already exists */ }
+try { sqlite.exec(`ALTER TABLE users ADD COLUMN password_hash TEXT`); } catch { /* already exists */ }
+try { sqlite.exec(`ALTER TABLE users ADD COLUMN last_request_at TEXT`); } catch { /* already exists */ }
+
 function flattenParams(params: any[]): any[] {
   if (params.length === 1 && Array.isArray(params[0])) {
     return params[0];

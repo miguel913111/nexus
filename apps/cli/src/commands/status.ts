@@ -24,28 +24,26 @@ export async function statusCommand() {
     console.log(chalk.white(`Plano: ${chalk.bold(status.user.plan.toUpperCase())}`));
     console.log(chalk.white(`Status: ${status.user.status === 'active' ? chalk.green('Ativo') : chalk.red(status.user.status)}`));
     
-    const percent = status.alerts.creditsPercentage;
-    const barColor = percent < 10 ? chalk.red : percent < 25 ? chalk.yellow : chalk.green;
+    const used = status.user.credits.used || 0;
+    const total = status.user.credits.total || 1;
+    const percent = Math.round((used / total) * 100);
+    const barColor = percent > 90 ? chalk.red : percent > 75 ? chalk.yellow : chalk.green;
     const bar = '█'.repeat(Math.round(percent / 5)) + '░'.repeat(20 - Math.round(percent / 5));
     
     console.log(chalk.white(`\n💰 Créditos:`));
     console.log(`  ${barColor(bar)} ${percent}%`);
     console.log(`  Restantes: ${barColor(status.user.credits.remaining.toLocaleString())}`);
-    console.log(`  Usados: ${chalk.yellow(status.user.credits.used.toLocaleString())}`);
+    console.log(`  Usados: ${chalk.yellow(used.toLocaleString())}`);
     console.log(`  Total: ${status.user.credits.total.toLocaleString()}`);
     
     // ALERTS
-    if (status.alerts.lowCredits) {
+    if (percent > 75) {
       console.log(chalk.red.bold(`\n⚠️  ALERTA: Créditos baixos (${percent}%)!`));
-      console.log(chalk.red(`  Renova o teu plano em: https://nexus-ia.ao/planos`));
-      
-      if (status.alerts.pending.length > 0) {
-        console.log(chalk.gray(`  Alertas pendentes: ${status.alerts.pending.length}`));
-      }
+      console.log(chalk.red(`  Renova o teu plano em: https://web-production-6ef15.up.railway.app`));
     }
     
     console.log(chalk.white(`\n📅 Assinatura:`));
-    console.log(`  Expira: ${new Date(status.user.expiresAt).toLocaleDateString('pt-AO', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}`);
+    console.log(`  Expira: ${status.user.expiresAt ? new Date(status.user.expiresAt).toLocaleDateString('pt-AO', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }) : 'N/A'}`);
     
     console.log(chalk.white(`\n📈 Uso este mês:`));
     console.log(`  Requests: ${status.usageThisMonth.requests.toLocaleString()}`);

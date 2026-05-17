@@ -20,7 +20,7 @@ export async function chatMode(options: { files?: string[] }) {
   console.log(chalk.gray('Dica: Usa @file caminho/do/ficheiro.ts para incluir contexto'));
   console.log(chalk.gray('Comandos: :quit | :clear | :status | :files\n'));
 
-  const messages: Array<{role: string, content: string}> = [];
+  const messages: Array<{role: 'system' | 'user' | 'assistant', content: string}> = [];
 
   const rl = readline.createInterface({
     input: process.stdin,
@@ -42,16 +42,18 @@ export async function chatMode(options: { files?: string[] }) {
       if (input === ':status') {
         try {
           const status = await client.getStatus();
-          const pct = status.alerts.creditsPercentage;
-          const color = pct < 10 ? chalk.red : pct < 25 ? chalk.yellow : chalk.green;
+          const used = status.user.credits.used || 0;
+          const total = status.user.credits.total || 1;
+          const pct = Math.round((used / total) * 100);
+          const color = pct > 90 ? chalk.red : pct > 75 ? chalk.yellow : chalk.green;
           
           console.log(color(`\n📊 Créditos: ${status.user.credits.remaining.toLocaleString()} / ${status.user.credits.total.toLocaleString()} (${pct}%)`));
-          console.log(chalk.blue(`Plano: ${status.user.plan} | Expira: ${new Date(status.user.expiresAt).toLocaleDateString('pt-AO')}\n`));
+          console.log(chalk.blue(`Plano: ${status.user.plan} | Expira: ${status.user.expiresAt ? new Date(status.user.expiresAt).toLocaleDateString('pt-AO') : 'N/A'}\n`));
           
           // Show alerts
-          if (status.alerts.lowCredits) {
+          if (pct > 75) {
             console.log(chalk.red.bold('⚠️  ALERTA: Créditos baixos!'));
-            console.log(chalk.red('Renova em: https://nexus-ia.ao/planos\n'));
+            console.log(chalk.red('Renova em: https://web-production-6ef15.up.railway.app\n'));
           }
         } catch (err: any) {
           console.log(chalk.red(`Erro: ${err.message}\n`));

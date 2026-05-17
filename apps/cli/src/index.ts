@@ -74,7 +74,7 @@ program
   .command('login')
   .description('Autenticar com API Key')
   .requiredOption('-k, --key <apiKey>', 'A tua API Key da NEXUS IA')
-  .option('-u, --url <url>', 'URL da API', 'https://api.nexus-ia.ao/v1')
+  .option('-u, --url <url>', 'URL da API', 'https://api-gateway-production-dccf.up.railway.app/v1')
   .action(loginCommand);
 
 program
