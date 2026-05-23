@@ -20,6 +20,7 @@ export default function DashboardPage() {
   const [authLoading, setAuthLoading] = useState(false);
   const [authError, setAuthError] = useState('');
   const [mounted, setMounted] = useState(false);
+  const [isVscodeLogin, setIsVscodeLogin] = useState(false);
 
   useEffect(() => {
     setMounted(true);
@@ -27,6 +28,14 @@ export default function DashboardPage() {
     const urlKey = params.get('api_key');
     const urlEmail = params.get('email');
     const urlError = params.get('error');
+    const vscodeParam = params.get('vscode');
+
+    if (vscodeParam === 'true') {
+      setIsVscodeLogin(true);
+      sessionStorage.setItem('nexus_vscode_login', 'true');
+    } else if (sessionStorage.getItem('nexus_vscode_login') === 'true') {
+      setIsVscodeLogin(true);
+    }
 
     if (urlError) {
       setAuthError(urlError === 'github_denied' || urlError === 'google_denied'
@@ -41,6 +50,14 @@ export default function DashboardPage() {
     if (urlKey) {
       localStorage.setItem('nexus_api_key', urlKey);
       if (urlEmail) localStorage.setItem('nexus_user_email', urlEmail);
+
+      // If coming from VS Code login, redirect back to VS Code
+      if (sessionStorage.getItem('nexus_vscode_login') === 'true') {
+        sessionStorage.removeItem('nexus_vscode_login');
+        window.location.href = `vscode://nexus-ia/auth?api_key=${encodeURIComponent(urlKey)}`;
+        return;
+      }
+
       setApiKey(urlKey);
       loadStatus(urlKey);
       loadInvoices();
@@ -119,6 +136,14 @@ export default function DashboardPage() {
       const key = data.api_key;
       localStorage.setItem('nexus_api_key', key);
       localStorage.setItem('nexus_user_email', data.email);
+
+      // If VS Code login, redirect back
+      if (isVscodeLogin || sessionStorage.getItem('nexus_vscode_login') === 'true') {
+        sessionStorage.removeItem('nexus_vscode_login');
+        window.location.href = `vscode://nexus-ia/auth?api_key=${encodeURIComponent(key)}`;
+        return;
+      }
+
       setApiKey(key);
       loadStatus(key);
       loadInvoices();
@@ -137,6 +162,12 @@ export default function DashboardPage() {
             <Code2 className="w-8 h-8 text-nexus-500" />
             <span className="text-2xl font-bold">NEXUS IA</span>
           </div>
+          {isVscodeLogin && (
+            <div className="bg-nexus-900/50 border border-nexus-700 rounded-xl p-4 mb-4 text-center">
+              <p className="text-nexus-300 text-sm font-medium">🔗 Login para VS Code</p>
+              <p className="text-nexus-400 text-xs mt-1">Após fazer login, serás redirecionado automaticamente para o VS Code.</p>
+            </div>
+          )}
           <div className="bg-slate-900 rounded-xl border border-slate-700 p-6">
             <div className="flex gap-2 mb-6">
               <button
@@ -202,14 +233,14 @@ export default function DashboardPage() {
 
             <div className="mt-4 space-y-2">
               <a
-                href="https://api-gateway-production-dccf.up.railway.app/v1/auth/github"
+                href={`https://api-gateway-production-dccf.up.railway.app/v1/auth/github${isVscodeLogin ? '?vscode=true' : ''}`}
                 className="w-full inline-flex items-center justify-center gap-2 px-4 py-3 bg-slate-800 hover:bg-slate-700 border border-slate-600 rounded-lg text-sm font-medium transition"
               >
                 <Github className="w-4 h-4" />
                 Continuar com GitHub
               </a>
               <a
-                href="https://api-gateway-production-dccf.up.railway.app/v1/auth/google"
+                href={`https://api-gateway-production-dccf.up.railway.app/v1/auth/google${isVscodeLogin ? '?vscode=true' : ''}`}
                 className="w-full inline-flex items-center justify-center gap-2 px-4 py-3 bg-slate-800 hover:bg-slate-700 border border-slate-600 rounded-lg text-sm font-medium transition"
               >
                 <svg className="w-4 h-4" viewBox="0 0 24 24">

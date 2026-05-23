@@ -1,5 +1,6 @@
-src/
-tsconfig.json
-*.vsix
-node_modules/
-.gitignore
+**
+!dist/**
+!package.json
+!README.md
+!icon.png
+!LICENSE

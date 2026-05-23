@@ -2,7 +2,7 @@
   "name": "nexus-ia",
   "displayName": "NEXUS IA - Kimi K2.6",
   "description": "Assistente de código com Kimi K2.6 para Angola via NEXUS IA",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "publisher": "nexus-ia",
   "icon": "icon.png",
   "repository": {
@@ -13,13 +13,16 @@
   "bugs": {
     "url": "https://github.com/miguel913111/nexus/issues"
   },
-  "keywords": ["nexus", "kimi", "ai", "assistant", "angola", "deepinfra", "chat", "code"],
+  "keywords": ["nexus", "kimi", "ai", "assistant", "angola", "deepinfra", "chat", "code", "copilot", "inline"],
   "license": "MIT",
   "engines": {
     "vscode": "^1.85.0"
   },
   "categories": ["Machine Learning", "Snippets", "Programming Languages"],
-  "activationEvents": ["onStartupFinished"],
+  "activationEvents": [
+    "onStartupFinished",
+    "onUri"
+  ],
   "main": "./dist/extension.js",
   "contributes": {
     "commands": [
@@ -43,6 +46,19 @@
       {
         "command": "nexus.status",
         "title": "NEXUS: Ver estado da conta"
+      },
+      {
+        "command": "nexus.login",
+        "title": "NEXUS: Login / Autenticar",
+        "icon": "$(account)"
+      },
+      {
+        "command": "nexus.logout",
+        "title": "NEXUS: Logout"
+      },
+      {
+        "command": "nexus.toggleInline",
+        "title": "NEXUS: Ativar/Desativar Autocompletar Inline"
       }
     ],
     "menus": {
@@ -75,6 +91,21 @@
           "type": "string",
           "default": "https://api-gateway-production-dccf.up.railway.app/v1",
           "description": "URL da API NEXUS IA"
+        },
+        "nexus.inlineCompletion.enabled": {
+          "type": "boolean",
+          "default": true,
+          "description": "Ativar sugestões inline de código (estilo Copilot)"
+        },
+        "nexus.inlineCompletion.debounce": {
+          "type": "number",
+          "default": 400,
+          "description": "Tempo de espera (ms) antes de pedir sugestão inline"
+        },
+        "nexus.inlineCompletion.maxLineLength": {
+          "type": "number",
+          "default": 100,
+          "description": "Número máximo de caracteres por linha para sugerir inline"
         }
       }
     }

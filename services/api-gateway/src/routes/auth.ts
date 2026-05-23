@@ -84,9 +84,10 @@ router.get('/github', (req: Request, res: Response) => {
   }
 
   const state = crypto.randomBytes(16).toString('hex');
+  const vscode = req.query.vscode === 'true';
   // Store state in a simple in-memory map (use Redis in production)
   (globalThis as any).__githubOAuthStates = (globalThis as any).__githubOAuthStates || new Map();
-  (globalThis as any).__githubOAuthStates.set(state, { createdAt: Date.now() });
+  (globalThis as any).__githubOAuthStates.set(state, { createdAt: Date.now(), vscode });
 
   const scope = 'read:user user:email';
   const redirectUrl = `https://github.com/login/oauth/authorize?client_id=${GITHUB_CLIENT_ID}&redirect_uri=${encodeURIComponent(GITHUB_CALLBACK_URL)}&scope=${encodeURIComponent(scope)}&state=${state}`;
@@ -112,6 +113,8 @@ router.get('/github/callback', async (req: Request, res: Response) => {
   if (!statesMap || !statesMap.has(state as string)) {
     return res.redirect(`${FRONTEND_URL}/dashboard?error=invalid_state`);
   }
+  const stateData = statesMap.get(state as string);
+  const vscodeFlag = stateData?.vscode ? '&vscode=true' : '';
   statesMap.delete(state as string);
 
   if (!GITHUB_CLIENT_ID || !GITHUB_CLIENT_SECRET) {
@@ -233,7 +236,7 @@ router.get('/github/callback', async (req: Request, res: Response) => {
 
     // Redirect to dashboard with API key
     console.log('[GITHUB CALLBACK] SUCCESS. Redirecting to dashboard...');
-    res.redirect(`${FRONTEND_URL}/dashboard?github_login=success&api_key=${encodeURIComponent(user.api_key)}&email=${encodeURIComponent(user.email)}&name=${encodeURIComponent(user.name || '')}`);
+    res.redirect(`${FRONTEND_URL}/dashboard?github_login=success&api_key=${encodeURIComponent(user.api_key)}&email=${encodeURIComponent(user.email)}&name=${encodeURIComponent(user.name || '')}${vscodeFlag}`);
   } catch (err: any) {
     console.error('[GITHUB CALLBACK] CRASH ERROR:', err.message || err);
     console.error('[GITHUB CALLBACK] STACK:', err.stack || 'no stack');
@@ -343,8 +346,9 @@ router.get('/google', (req: Request, res: Response) => {
   }
 
   const state = crypto.randomBytes(16).toString('hex');
+  const vscode = req.query.vscode === 'true';
   (globalThis as any).__googleOAuthStates = (globalThis as any).__googleOAuthStates || new Map();
-  (globalThis as any).__googleOAuthStates.set(state, { createdAt: Date.now() });
+  (globalThis as any).__googleOAuthStates.set(state, { createdAt: Date.now(), vscode });
 
   const scope = encodeURIComponent('openid email profile');
   const redirectUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${GOOGLE_CLIENT_ID}&redirect_uri=${encodeURIComponent(GOOGLE_CALLBACK_URL)}&response_type=code&scope=${scope}&state=${state}&access_type=offline&prompt=consent`;
@@ -368,6 +372,8 @@ router.get('/google/callback', async (req: Request, res: Response) => {
   if (!statesMap || !statesMap.has(state as string)) {
     return res.redirect(`${FRONTEND_URL}/dashboard?error=invalid_state`);
   }
+  const stateData = statesMap.get(state as string);
+  const vscodeFlag = stateData?.vscode ? '&vscode=true' : '';
   statesMap.delete(state as string);
 
   if (!GOOGLE_CLIENT_ID || !GOOGLE_CLIENT_SECRET) {
@@ -458,7 +464,7 @@ router.get('/google/callback', async (req: Request, res: Response) => {
     }
 
     // Redirect to dashboard with API key
-    res.redirect(`${FRONTEND_URL}/dashboard?github_login=success&api_key=${encodeURIComponent(user.api_key)}&email=${encodeURIComponent(user.email)}&name=${encodeURIComponent(user.name || '')}`);
+    res.redirect(`${FRONTEND_URL}/dashboard?github_login=success&api_key=${encodeURIComponent(user.api_key)}&email=${encodeURIComponent(user.email)}&name=${encodeURIComponent(user.name || '')}${vscodeFlag}`);
   } catch (err: any) {
     logger.error('Google callback error:', err);
     res.redirect(`${FRONTEND_URL}/dashboard?error=google_callback_error`);
